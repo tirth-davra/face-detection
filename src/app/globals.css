@@ -24,3 +24,83 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Mobile camera optimizations */
+@media (max-width: 768px) {
+  .camera-container {
+    width: 100vw;
+    max-width: 100%;
+    padding: 0;
+  }
+  
+  video {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: cover;
+  }
+
+  /* Responsive text sizing */
+  h1 {
+    font-size: 1.5rem !important;
+  }
+
+  /* Better button sizing on mobile */
+  button {
+    min-height: 44px;
+    font-size: 16px;
+  }
+}
+
+/* Prevent zoom on input focus (iOS) */
+input, select, textarea, button {
+  font-size: 16px !important;
+}
+
+/* Handle landscape orientation */
+@media (orientation: landscape) and (max-height: 500px) {
+  .camera-container {
+    height: 80vh;
+  }
+
+  main {
+    padding: 1rem !important;
+  }
+
+  h1 {
+    font-size: 1.25rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+}
+
+/* PWA specific styles */
+@media (display-mode: standalone) {
+  body {
+    /* Add padding for status bar on mobile PWA */
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Touch-friendly interface */
+@media (pointer: coarse) {
+  button {
+    min-height: 48px;
+    padding: 12px 16px;
+  }
+
+  .text-xs {
+    font-size: 14px !important;
+  }
+
+  .text-sm {
+    font-size: 16px !important;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  video {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}

@@ -1,6 +1,8 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
 import Webcam from "react-webcam";
+import CameraPermissions from '../components/CameraPermissions';
+import MobileWebcam from '../components/MobileWebcam';
 
 // Constants
 const MATCH_THRESHOLD = 0.4;
@@ -47,6 +49,32 @@ export default function Home() {
   const [countdown, setCountdown] = useState<number>(0);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [faceapi, setFaceapi] = useState<any>(null);
+  
+  // Camera permission states
+  const [cameraPermission, setCameraPermission] = useState<'pending' | 'granted' | 'denied'>('pending');
+  const [cameraError, setCameraError] = useState<string>('');
+
+  // Camera permission handlers
+  const handleCameraPermissionGranted = () => {
+    setCameraPermission('granted');
+    setCameraError('');
+  };
+
+  const handleCameraPermissionDenied = () => {
+    setCameraPermission('denied');
+    setCameraError('Camera access is required for face recognition');
+  };
+
+  const handleUserMedia = () => {
+    console.log('Camera stream started successfully');
+    setCameraError('');
+  };
+
+  const handleUserMediaError = (error: string | DOMException) => {
+    console.error('Camera error:', error);
+    setCameraError(typeof error === 'string' ? error : error.message);
+    setCameraPermission('denied');
+  };
 
   // Helper function to find best employee match
   const findBestMatch = (descriptor: Float32Array) => {
@@ -286,19 +314,31 @@ export default function Home() {
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+      {/* Camera Permissions Modal */}
+      {cameraPermission !== 'granted' && (
+        <CameraPermissions
+          onPermissionGranted={handleCameraPermissionGranted}
+          onPermissionDenied={handleCameraPermissionDenied}
+        />
+      )}
+
       <h1 className="text-3xl font-bold mb-2">
         Office Face Recognition System
       </h1>
       <p className="text-gray-600 mb-6">Employee Access Control</p>
 
+      {/* Camera Error Display */}
+      {cameraError && (
+        <div className="mb-4 p-3 bg-red-100 border border-red-400 rounded text-red-700 text-sm max-w-md">
+          {cameraError}
+        </div>
+      )}
+
       <div className="relative border rounded overflow-hidden mb-4 shadow-lg">
-        <Webcam
+        <MobileWebcam
           ref={webcamRef}
-          audio={false}
-          screenshotFormat="image/jpeg"
-          width={320}
-          height={240}
-          videoConstraints={{ facingMode: "user" }}
+          onUserMedia={handleUserMedia}
+          onUserMediaError={handleUserMediaError}
         />
 
         {/* Face Detection Guide Overlay */}
@@ -347,7 +387,7 @@ export default function Home() {
       <div className="flex gap-4 mb-4">
         <button
           onClick={() => setIsAutoDetecting(!isAutoDetecting)}
-          disabled={!isInitialized}
+          disabled={!isInitialized || cameraPermission !== 'granted'}
           className={`px-6 py-2 rounded transition-colors ${
             isAutoDetecting
               ? "bg-red-600 text-white hover:bg-red-700"
