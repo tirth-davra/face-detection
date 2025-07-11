@@ -7,7 +7,7 @@ const withSerwist = withSerwistInit({
 });
 
 const nextConfig: NextConfig = {
-  distDir: "build",
+  // distDir: "build",
   reactStrictMode: true,
 };
 
