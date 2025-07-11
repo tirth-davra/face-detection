@@ -65,9 +65,9 @@ export default function CameraPermissions({
       
       setPermissionStatus('granted');
       onPermissionGranted();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Camera permission denied:', error);
-      setError(error.message || 'Camera access denied');
+      setError(error instanceof Error ? error.message : 'Camera access denied');
       setPermissionStatus('denied');
       onPermissionDenied();
     }
