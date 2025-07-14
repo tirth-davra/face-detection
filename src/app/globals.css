@@ -1,8 +1,29 @@
 @import "tailwindcss";
 
+/* Design System Variables */
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --surface: #f8fafc;
+  --surface-elevated: #ffffff;
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
+  --primary: #3b82f6;
+  --primary-dark: #2563eb;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
 }
 
 @theme inline {
@@ -16,91 +37,315 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --surface: #1e293b;
+    --surface-elevated: #334155;
+    --border: #475569;
+    --border-light: #64748b;
+    /* --text-secondary: #cbd5e1; */
+    /* --text-muted: #94a3b8; */
   }
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
 }
 
-/* Mobile camera optimizations */
-@media (max-width: 768px) {
-  .camera-container {
-    width: 100vw;
-    max-width: 100%;
-    padding: 0;
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+h1 {
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 700;
+}
+
+h2 {
+  font-size: clamp(1.5rem, 3vw, 1.875rem);
+}
+
+h3 {
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+}
+
+p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* Button Styles */
+button {
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  outline: none;
+  position: relative;
+  overflow: hidden;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Card Styles */
+.card {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease-in-out;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+/* Camera Container */
+.camera-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--surface);
+  border: 2px solid var(--border-light);
+}
+
+.camera-container video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+/* Animation Classes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
-  
-  video {
-    width: 100% !important;
-    height: auto !important;
-    object-fit: cover;
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
   }
 
-  /* Responsive text sizing */
+  .camera-container {
+    aspect-ratio: 4/3;
+    border-radius: var(--radius-md);
+  }
+
+  /* Touch-friendly buttons */
+  /* button {
+    min-height: 48px;
+    padding: 12px 16px;
+    font-size: 16px;
+  } */
+
+  /* Responsive spacing */
+  .space-y-6 > * + * {
+    margin-top: 1rem !important;
+  }
+
+  .space-y-4 > * + * {
+    margin-top: 0.75rem !important;
+  }
+
+  .space-y-3 > * + * {
+    margin-top: 0.5rem !important;
+  }
+
+  /* Better card spacing on mobile */
+  .card {
+    margin: 0.5rem;
+    border-radius: var(--radius-lg);
+  }
+
+  /* Improved text sizing */
+  .text-xs {
+    font-size: 0.875rem !important;
+  }
+
+  .text-sm {
+    font-size: 1rem !important;
+  }
+}
+
+/* Tablet Optimizations */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .camera-container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+/* Landscape Orientation */
+@media (orientation: landscape) and (max-height: 600px) {
+  .camera-container {
+    aspect-ratio: 16/9;
+    max-height: 60vh;
+  }
+
   h1 {
     font-size: 1.5rem !important;
-  }
-
-  /* Better button sizing on mobile */
-  button {
-    min-height: 44px;
-    font-size: 16px;
-  }
-}
-
-/* Prevent zoom on input focus (iOS) */
-input, select, textarea, button {
-  font-size: 16px !important;
-}
-
-/* Handle landscape orientation */
-@media (orientation: landscape) and (max-height: 500px) {
-  .camera-container {
-    height: 80vh;
-  }
-
-  main {
-    padding: 1rem !important;
-  }
-
-  h1 {
-    font-size: 1.25rem !important;
     margin-bottom: 0.5rem !important;
   }
+
+  .space-y-6 > * + * {
+    margin-top: 1rem !important;
+  }
 }
 
-/* PWA specific styles */
+/* PWA Specific Styles */
 @media (display-mode: standalone) {
   body {
     /* Add padding for status bar on mobile PWA */
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Hide scrollbars in PWA mode */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Prevent bounce scrolling */
+  body {
+    overscroll-behavior: none;
   }
 }
 
-/* Touch-friendly interface */
-@media (pointer: coarse) {
-  button {
-    min-height: 48px;
-    padding: 12px 16px;
-  }
-
-  .text-xs {
-    font-size: 14px !important;
-  }
-
-  .text-sm {
-    font-size: 16px !important;
-  }
-}
-
-/* High DPI displays */
+/* High DPI Displays */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  video {
+  .camera-container video {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
   }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus styles for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Selection styles */
+::selection {
+  background: var(--primary);
+  color: white;
+}
+
+::-moz-selection {
+  background: var(--primary);
+  color: white;
 }
