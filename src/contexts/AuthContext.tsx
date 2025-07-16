@@ -1,6 +1,12 @@
 "use client";
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import { useRouter } from "next/navigation";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -20,30 +26,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Admin credentials (in a real app, this would be handled server-side)
   const ADMIN_CREDENTIALS = {
-    username: 'admin',
-    password: 'admin123'
+    username: "admin",
+    password: "admin123",
   };
 
   useEffect(() => {
     // Check authentication status on mount
     const checkAuth = () => {
       try {
-        const authStatus = localStorage.getItem('isAuthenticated');
-        const adminUser = localStorage.getItem('adminUser');
-        
+        const authStatus = localStorage.getItem("isAuthenticated");
+        const adminUser = localStorage.getItem("adminUser");
+
         // Also check cookies for middleware compatibility
-        const cookies = document.cookie.split(';').reduce((acc, cookie) => {
-          const [key, value] = cookie.trim().split('=');
+        const cookies = document.cookie.split(";").reduce((acc, cookie) => {
+          const [key, value] = cookie.trim().split("=");
           acc[key] = value;
           return acc;
         }, {} as Record<string, string>);
-        
-        if ((authStatus === 'true' && adminUser) || cookies.isAuthenticated === 'true') {
+
+        if (
+          (authStatus === "true" && adminUser) ||
+          cookies.isAuthenticated === "true"
+        ) {
           setIsAuthenticated(true);
-          setUser(adminUser || cookies.adminUser || 'admin');
+          setUser(adminUser || cookies.adminUser || "admin");
         }
       } catch (error) {
-        console.error('Error checking authentication:', error);
+        console.error("Error checking authentication:", error);
       } finally {
         setLoading(false);
       }
@@ -52,19 +61,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     checkAuth();
   }, []);
 
-  const login = async (username: string, password: string): Promise<boolean> => {
+  const login = async (
+    username: string,
+    password: string
+  ): Promise<boolean> => {
     try {
       // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-        localStorage.setItem('isAuthenticated', 'true');
-        localStorage.setItem('adminUser', username);
-        
+      if (
+        username === ADMIN_CREDENTIALS.username &&
+        password === ADMIN_CREDENTIALS.password
+      ) {
+        localStorage.setItem("isAuthenticated", "true");
+        localStorage.setItem("adminUser", username);
+        localStorage.setItem("isAdmin", "true");
+
         // Set cookie for middleware
-        document.cookie = `isAuthenticated=true; path=/; max-age=${60 * 60 * 24 * 7}`; // 7 days
-        document.cookie = `adminUser=${username}; path=/; max-age=${60 * 60 * 24 * 7}`;
-        
+        document.cookie = `isAuthenticated=true; path=/; max-age=${
+          60 * 60 * 24 * 7
+        }`; // 7 days
+        document.cookie = `adminUser=${username}; path=/; max-age=${
+          60 * 60 * 24 * 7
+        }`;
+        document.cookie = `isAdmin=true; path=/; max-age=${60 * 60 * 24 * 7}`;
+
         setIsAuthenticated(true);
         setUser(username);
         return true;
@@ -72,22 +93,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return false;
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
       return false;
     }
   };
 
   const logout = () => {
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('adminUser');
-    
+    localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("adminUser");
+    localStorage.removeItem("isAdmin");
+
     // Remove cookies
-    document.cookie = 'isAuthenticated=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-    document.cookie = 'adminUser=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-    
+    document.cookie =
+      "isAuthenticated=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    document.cookie =
+      "adminUser=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    document.cookie = "isAdmin=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+
     setIsAuthenticated(false);
     setUser(null);
-    router.push('/login');
+    router.push("/login");
   };
 
   const value = {
@@ -95,20 +120,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     user,
     login,
     logout,
-    loading
+    loading,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
-} 
+}

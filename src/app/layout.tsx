@@ -15,10 +15,18 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Face Recognition App",
-  description: "Progressive Web App for face recognition and employee access control",
+  description:
+    "Progressive Web App for face recognition and employee access control",
   generator: "Next.js",
   manifest: "/manifest.json",
-  keywords: ["nextjs", "pwa", "progressive web app", "face recognition", "camera", "mobile"],
+  keywords: [
+    "nextjs",
+    "pwa",
+    "progressive web app",
+    "face recognition",
+    "camera",
+    "mobile",
+  ],
   icons: [
     {
       rel: "icon",
@@ -46,20 +54,34 @@ export default function RootLayout({
       <head>
         <meta name="theme-color" content="#00ff00" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
         <meta name="apple-mobile-web-app-title" content="FaceApp" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+        />
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icons/icon-192-192.png" />
+        <link
+          rel="apple-touch-icon"
+          sizes="192x192"
+          href="/icons/icon-192-192.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="256x256"
+          href="/icons/icon-192-256.png"
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );
